@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const { findAll } = require('../services/bookService');
+const { findAll, create } = require('../services/bookService');
 
 router.get('/', (req, res) => {
   findAll().then((books) => {
@@ -13,7 +13,14 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  res.send({});
+  create(req.body).then((book) => {
+    res.send(book);
+  }).catch((e) => {
+    console.error('books-routes: ', e.message);
+    res.status(500).send({
+      error: e.message,
+    });
+  });
 });
 
 router.put('/', (req, res) => {

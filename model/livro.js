@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const { connection } = require('../config/database');
+const bookTypes = require('./bookTypes');
 
 const { Model } = Sequelize;
 
@@ -8,6 +9,7 @@ Livro.init({
   id: {
     type: Sequelize.NUMBER,
     primaryKey: true,
+    autoIncrement: true,
   },
   nome: {
     type: Sequelize.STRING,
@@ -41,7 +43,7 @@ Livro.init({
   },
   tipo: {
     type: Sequelize.ENUM,
-    values: ['sdsds', 'sdsd'],
+    values: bookTypes,
     allowNull: false,
   },
 }, {
