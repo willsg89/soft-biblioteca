@@ -1,8 +1,19 @@
 const express = require('express');
+const { initDB } = require('./config/database');
+const routes = require('./routes');
 
 const app = express();
 const port = 3000;
 
-app.get('/', (req, res) => res.send('Hello World!'));
+app.use('/', routes);
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+async function initApp() {
+  try {
+    await initDB();
+    app.listen(port, () => console.log(`App listening on port ${port}!`));
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+initApp();
