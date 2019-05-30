@@ -3,7 +3,7 @@ const logger = require('../config/logger');
 
 const router = express.Router();
 const {
-  findAll, create, findOne, deleteOne,
+  findAll, create, findOne, deleteOne, updateOne,
 } = require('../services/bookService');
 
 router.get('/', (req, res) => {
@@ -24,7 +24,9 @@ router.get('/:id', (req, res) => {
     }
   }).catch((e) => {
     logger.error('books-routes: ', e);
-    res.sendStatus(500);
+    res.status(500).send({
+      error: e.message,
+    });
   });
 });
 
@@ -48,8 +50,15 @@ router.post('/', (req, res) => {
   });
 });
 
-router.put('/', (req, res) => {
-  res.send({});
+router.put('/:id', (req, res) => {
+  updateOne(req.params.id, req.body).then(() => {
+    res.sendStatus(200);
+  }).catch((e) => {
+    logger.error('books-routes: ', e.message);
+    res.status(500).send({
+      error: e.message,
+    });
+  });
 });
 
 

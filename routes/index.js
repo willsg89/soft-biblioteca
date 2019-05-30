@@ -7,6 +7,6 @@ const bookRoutes = require('./book');
 
 app.use('/books', bookRoutes);
 app.use('/user', userRoutes);
-// app.use('/', bookRoutes);
+// app.use('/', heathCehck);
 
 module.exports = app;

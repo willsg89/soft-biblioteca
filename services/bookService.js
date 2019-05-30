@@ -12,30 +12,28 @@ const findAll = () => new Promise((resolve, reject) => {
   });
 });
 
-const findOne = id => new Promise((resolve, reject) => {
-  Book.findOne({
-    where: {
-      id,
-    },
-  }).then((book) => {
-    logger.debug('bookService:findOne: ', book);
-    resolve(book);
-  }).catch((e) => {
-    reject(e);
-  });
+const findOne = id => Book.findOne({
+  where: {
+    id,
+  },
+}).then((book) => {
+  logger.debug('bookService:findOne: ', book);
+  return book;
+}).catch((e) => {
+  logger.error('bookService:findOne:error: ', e);
+  throw e;
 });
 
-const deleteOne = id => new Promise((resolve, reject) => {
-  Book.destroy({
-    where: {
-      id,
-    },
-  }).then((countRows) => {
-    logger.debug('bookService:deleteOne: ', countRows);
-    resolve(countRows);
-  }).catch((e) => {
-    reject(e);
-  });
+const deleteOne = id => Book.destroy({
+  where: {
+    id,
+  },
+}).then((countRows) => {
+  logger.debug('bookService:deleteOne: ', countRows);
+  return countRows > 0;
+}).catch((e) => {
+  logger.error('bookService:deleteOne:error: ', e);
+  throw e;
 });
 
 const validadeCreate = (bookToInsert) => {
@@ -88,15 +86,53 @@ const create = (bookRequest = {}) => new Promise((resolve, reject) => {
   return undefined;
 });
 
-const update = () => new Promise((resolve, reject) => {
-  Book.update({ lastName: 'Doe' }, {
+const buildUpdateObject = (bookRequest) => {
+  const bookToUpdate = {};
+  if (bookRequest.name) {
+    bookToUpdate.nome = bookRequest.name;
+  }
+  if (bookRequest.year) {
+    bookToUpdate.ano = Number(bookRequest.year);
+  }
+  if (bookRequest.isbn13) {
+    bookToUpdate.isbn13 = bookRequest.isbn13;
+  }
+  if (bookRequest.isbn10) {
+    bookToUpdate.isbn10 = bookRequest.isbn10;
+  }
+  if (bookRequest.owner) {
+    bookToUpdate.dono = bookRequest.owner;
+  }
+  if (bookRequest.description) {
+    bookToUpdate.descricao = bookRequest.description;
+  }
+  if (bookRequest.type) {
+    bookToUpdate.tipo = bookRequest.type;
+  }
+  bookToUpdate.ultimaAtualizacao = moment().valueOf();
+  return bookToUpdate;
+};
+
+const updateOne = (id, bookRequest) => new Promise((resolve, reject) => {
+  if (!id) {
+    return reject(new Error('id.empty'));
+  }
+  const bookToUpdate = buildUpdateObject(bookRequest);
+  if (bookToUpdate.ano <= 0 || Number.isNaN(bookToUpdate.ano)) {
+    return reject(new Error('book.year.is.empty'));
+  }
+  if (bookToUpdate.tipo && !bookTypes.includes(bookToUpdate.tipo)) {
+    return reject(new Error('book.type.empty'));
+  }
+  return Book.update(bookToUpdate, {
     where: {
-      lastName: null,
+      id,
     },
   }).then(() => {
-    logger.log('Done');
+    logger.debug('bookService:updateOne:ok');
     resolve();
   }).catch((e) => {
+    logger.debug('bookService:updateOne:error: ', e);
     reject(e);
   });
 });
@@ -105,4 +141,4 @@ module.exports.findAll = findAll;
 module.exports.findOne = findOne;
 module.exports.create = create;
 module.exports.deleteOne = deleteOne;
-module.exports.update = update;
+module.exports.updateOne = updateOne;
