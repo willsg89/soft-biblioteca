@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const logger = require('../config/logger');
 
 const sequelize = new Sequelize('biblioteca', 'root', '1q2w3e4r', {
   host: 'localhost',
@@ -9,11 +10,11 @@ const initDB = () => new Promise((resolve, reject) => {
   sequelize
     .authenticate()
     .then(() => {
-      console.log('Connection has been established successfully.');
+      logger.info('Connection has been established successfully.');
       resolve();
     })
     .catch((err) => {
-      console.error('Unable to connect to the database:', err);
+      logger.error('Unable to connect to the database:', err);
       reject(err);
     });
 });

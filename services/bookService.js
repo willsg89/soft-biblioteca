@@ -1,9 +1,11 @@
 const moment = require('moment');
 const Book = require('../model/livro');
+const logger = require('../config/logger');
 const bookTypes = require('../model/bookTypes');
 
 const findAll = () => new Promise((resolve, reject) => {
   Book.findAll().then((books) => {
+    logger.debug('bookService:findAll: ', books);
     resolve(books);
   }).catch((e) => {
     reject(e);
@@ -57,7 +59,7 @@ const update = () => new Promise((resolve, reject) => {
       lastName: null,
     },
   }).then(() => {
-    console.log('Done');
+    logger.log('Done');
     resolve();
   }).catch((e) => {
     reject(e);
