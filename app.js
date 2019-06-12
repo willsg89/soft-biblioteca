@@ -8,14 +8,23 @@ const logger = require('./config/logger');
 const app = express();
 
 app.use(express.json());
-app.use(morgan('combined', { stream: logger.stream }));
-app.use(cors());
+// app.use(morgan('combined', { stream: logger.stream }));
+// app.use(cors());
 
-const port = 3001;
 
+app.use((req, res, next) => {
+  if (!req.headers.auth || req.headers.auth !== '123') {
+    res.sendStatus(401);
+  } else {
+    next();
+  }
+});
 app.use('/', routes);
 
-async function initApp() {
+const port = process.env.PORT_API || 3001;
+
+
+function initApp() {
   try {
     // await initDB();
     app.listen(port, () => logger.info(`App listening on port ${port}!`));

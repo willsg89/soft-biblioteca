@@ -8,11 +8,11 @@ router.get('/', (req, res) => {
   res.send(db);
 });
 
-router.get('/:id', (req, res) => {
+router.get('/qqq', (req, res) => {
   if (!db) {
     res.sendStatus(404);
   } else {
-    res.send(db[0]);
+    res.send({ id: req.query.name });
   }
 });
 
@@ -21,8 +21,16 @@ router.delete('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  db.push(req.body);
-  res.sendStatus(200);
+  const reqBody = req.body;
+  if (reqBody.name) {
+    db.push({
+      nome: reqBody.name,
+      id: 2,
+    });
+    res.status(201).send({ id: 2 });
+  } else {
+    res.status(500).send({ erro: 'nome é obrigatorio' });
+  }
 });
 
 router.put('/:id', (req, res) => {
@@ -30,4 +38,6 @@ router.put('/:id', (req, res) => {
 });
 
 
-module.exports = router;
+module.exports = router; // commons-js
+module.exports.funcaoSoma = router;
+// export default router;
