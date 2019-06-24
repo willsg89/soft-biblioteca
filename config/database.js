@@ -1,9 +1,10 @@
 const Sequelize = require('sequelize');
 const logger = require('../config/logger');
 
-const sequelize = new Sequelize('biblioteca', 'root', '1q2w3e4r', {
-  host: 'localhost',
-  dialect: 'mysql',
+const sequelize = new Sequelize('SCA_2019', 'SCA_2019', 'SCA_2019', {
+  host: '192.168.1.89',
+  port: 5432,
+  dialect: 'postgres',
 });
 
 const initDB = () => new Promise((resolve, reject) => {

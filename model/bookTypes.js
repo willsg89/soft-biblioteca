@@ -1,1 +1,0 @@
-module.exports = ['livro', 'periodico'];

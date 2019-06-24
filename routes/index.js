@@ -1,14 +1,9 @@
 const express = require('express');
-// const ldap = require('ldapjs');
 
 const app = express();
 
-const userRoutes = require('./user');
-const bookRoutes = require('./book');
-const authorRoutes = require('./author');
+const ufRoutes = require('./uf');
 
-app.use('/books', bookRoutes);
-app.use('/user', userRoutes);
-app.use('/authors', authorRoutes);
+app.use('/uf', ufRoutes);
 
 module.exports = app;
